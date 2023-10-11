@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+  <head>
+  <style type="text/css">
+  html, body { height: 100%; margin: 0; }
+
+		
+	div.bottomRaw {
+		height:29.5%;
+		width:100% ;
+		display: flex;  
+		flex-direction: raw;
+	
+	}
+	
+	textarea.ourTextArea{
+		width:73% ;
+		resize: none;
+
+		}
+	div.bottomColumn {
+		width: 27%;
+		display: flex; 
+		align-items: center;
+		flex-direction: column;
+	
+	}
+    input.myinput{
+		width: 92.5%;
+
+
+	}
+	button.submit {
+		width: 100%;
+		flex-grow: 1 
+	}
+	
+	
+	div.chatText{
+		display: flex;
+		height:70%;
+		width:100% ;
+		border-bottom:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;
+		overflow-y: scroll;
+		flex-direction: column-reverse;
+		align-items: revert;
+
+    }
+
+ </style>
+    <meta charset="UTF-8" />
+    <title>Hello World!</title>
+  </head>
+  <body>
+	<div class = "chatText" id = "chatText" >
+	 <div class = "ourText">
+	 qqqqqq
+	</div>
+	</div>
+
+
+		<div class = "bottomRaw">
+			<textarea class = "ourTextArea" id = "ourTextArea" >
+			</textarea>
+
+		<div class = "bottomColumn">
+			<input placeholder = "имя" class = "myinput" id = "ourInput" type = "text"></input>
+			<button type = "submit" class= "submit" onclick = "sendMessage();"> Отправить </button>
+
+		</div>
+
+  </body>
+  
+</html>
+
+
+
+
+<script>
+var socket = new WebSocket("ws://127.0.0.1:8080/");
+
+socket.onopen = function (event) {
+      console.log('connection is open!')          
+    }
+
+  socket.addEventListener('message', (event) => {
+	const node = document.createElement("div");
+	node.innerHTML = event.data
+	document.getElementById("chatText").prepend(node); 
+    console.log( event.data)
+
+  });
+  
+function sendMessage() {
+	let ourTextArea = document.getElementById("ourTextArea")
+	let ourText = ourTextArea.value 
+	ourTextArea.value  = ""
+	let ourName = document.getElementById("ourInput")
+	socket.send(ourName.value  + ": " + ourText) 
+}
+
+
+</script>
